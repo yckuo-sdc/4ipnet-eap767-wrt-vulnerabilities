@@ -14,7 +14,7 @@ Location: http://{host}/login.asp
 ```
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_1ab1ac81f80c42b992f6c4fc96be40e8.png)
 
-After accessing the login page of the web service, it was discovered to be a 4ipnet wireless network controller
+After accessing the login web page, it was discovered to be a 4ipnet wireless network controller
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_247c7496749603bc7b9772d11afd7ba4.png)
 
 
@@ -64,7 +64,7 @@ Using the same set of credentials (admin), regardless of how many times you log 
 
 **PoC II @ cmd**
 
-Using the curl tool to simulate an HTTP request to access the management interface home page, I was redirected to the login page
+Using the curl tool to simulate an HTTP request to access the management interface home page, it was redirected to the login page
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_f3925ef9b1edaae1b762ad800322d80d.png)
 
 Using the curl tool to simulate an HTTP request and including the aforementioned obtained cookie, it was confirmed that access to the authenticated management interface home page is possible
