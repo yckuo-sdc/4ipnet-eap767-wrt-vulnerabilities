@@ -10,7 +10,8 @@ The login web page is exposed to internet, and it's used for 4ipnet wireless net
 System Overview
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_fa6cb02d32f831033c013c4142586a4f.png)
 
-Network Utilities feature: `allowing network tests such as ping, tracert, arping, etc., to be performed through the web page.`
+Network Utilities
+`allowing network tests such as ping, tracert, arping, etc., to be performed through the web page.`
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_9925e6bd58df1d54d022f404504adbef.png)
 
 ## Exploit
