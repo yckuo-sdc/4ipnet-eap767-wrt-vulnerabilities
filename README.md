@@ -15,7 +15,7 @@ Network Utilities
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_9925e6bd58df1d54d022f404504adbef.png)
 
 ## Exploit
-**Phase I @ Browser**
+**Phase 1 @ Browser**
 
 The front-end performs input text validation to check whether the input text is compliant
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_0d41715f59b4037ce1b9dcea6c9d31ce.png)
@@ -46,7 +46,7 @@ It was found that the management interface relies solely on the cookie name/valu
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_3ecdb0b545bf10be16816293036534e8.png)
 
 
-**Phase II @ cmd**
+**Phase 2 @ cmd**
 
 Using the curl tool to simulate an HTTP request to access the management interface home page, it was redirected to the login page
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_f3925ef9b1edaae1b762ad800322d80d.png)
@@ -56,7 +56,7 @@ Using the curl tool to simulate an HTTP request and including the aforementioned
 
 Attempted to access the `getPing.egi` file and escape the query string parameter url using special characters (;, |) in an attempt to evade security and inject a specified command
 
-**Attemp I with `;`**
+**Attemp 1 with `;`**
 Detected as invalid characters by the backend program.
 ```zsh!
 ❯ curl -i -b "username=admin; password=17lgP6vqCV1Ko" "http://{host}/getPing.egi?url=127.0.0.1;"
@@ -74,7 +74,7 @@ OK%
 ```
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_6b5b52a9a94d27f7ace8850892ba7f77.png)
 
-**Attemp II with `|`**
+**Attemp 2 with `|`**
 Successful escape!!! and obtained pid!!!
 
 ```zsh!
