@@ -1,4 +1,4 @@
-# RCE PoC for 4ipnet/EAP767 device
+# 4ipnet/EAP767 Exploit POC
 
 The login web page is exposed to internet, and it's used for 4ipnet wireless network controller
 > Search online documents to obtain the default password for the device.
