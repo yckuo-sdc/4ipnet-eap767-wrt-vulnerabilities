@@ -21,6 +21,7 @@ After accessing the login web page, it was discovered to be a 4ipnet wireless ne
 **Search online articles to obtain the default password for the device.**
 
 **Web console features**
+
 Overview
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_fa6cb02d32f831033c013c4142586a4f.png)
 
@@ -46,9 +47,7 @@ http://{host}/getPing.egi?url=127.0.0.1
 # request 2
 http://{host}/getPing.egi?pid=940
 ```
-:::info
-It can be observed that its ping function first sends the url as a query string parameter, obtains the pid, then retrieves ping output in batches through the pid parameter, and finally presents the results on the web page
-:::
+> It can be observed that its ping function first sends the url as a query string parameter, obtains the pid, then retrieves ping output in batches through the pid parameter, and finally presents the results on the web page
 
 It was found that the management interface relies solely on the cookie name/value as the basis for user identification
 | Name | Value |
@@ -120,10 +119,7 @@ Inject Target with `ls -l` to display the current directory structure, file perm
 ![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_caee4f89b8ef4271c2f50521c479fe61.png)
 
 
-:::success
-Confirmed the presence of a Remote Code Execution (RCE) vulnerability in the product. Arbitrary commands can be executed by passing the url parameter: input_text + pipe + command
-:::
-
+>Confirmed the presence of a Remote Code Execution (RCE) vulnerability in the product. Arbitrary commands can be executed by passing the url parameter: input_text + pipe + command
 
 ## Verify the device brand and model.
 ```zsh!
