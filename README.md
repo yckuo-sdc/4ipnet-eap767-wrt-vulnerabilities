@@ -1,4 +1,4 @@
-# 4ipnet/EAP767 Exploit POC
+# 4ipnet/EAP767 WRT Vulnerabilities
 
 The login web page is exposed to internet, and it's used for 4ipnet wireless network controller
 > Search online documents to obtain the default password for the device.
