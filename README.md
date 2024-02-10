@@ -5,7 +5,9 @@
 EAP767 - 3.42.00
 ## Description
 - The device is vulnerable to Incorrect Access Control. It uses the same set of credentials, regardless of how many times a user logs in, the content of the cookie remains unchanged.
-- A command injection vulnerability was found within the web interface of the device, allowing an attacker with valid credentials to inject arbitrary shell commands to be executed by the device with root privileges.
+- A command injection vulnerability was found within the web interface of the device.
+## Impact
+An attacker may inject arbitrary shell commands with valid credentials, and it be executed by the device with root privileges.
 
 The login web page is exposed to internet, and it's used for 4ipnet wireless network controller
 > Search online documents to obtain the default password for the device.
