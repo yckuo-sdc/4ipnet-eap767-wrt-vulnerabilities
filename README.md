@@ -14,7 +14,7 @@ An attacker may inject arbitrary shell commands with valid credentials, and it b
 ## Mitigation 
 - Disable internet access. 
 - Change default credential.
-## Exploit PoC
+## Device Features 
 The login web page is exposed to internet, and it's used for 4ipnet wireless network controller
 > Search online documents to obtain the default password for the device.
 
