@@ -9,8 +9,8 @@ EAP767 - 3.42.00
 ## Impact
 An attacker may inject arbitrary shell commands with valid credentials, and it be executed by the device with root privileges.
 ## Solution
-Stop using the products and switch to alternative products
-The developer states that the support for the affected product ended in Oct 2020, and the firmware updates will not be provided.
+- Stop using the products and switch to alternative products
+- The developer has disbanded in Oct 2020, and the firmware updates will not be provided.
 
 The login web page is exposed to internet, and it's used for 4ipnet wireless network controller
 > Search online documents to obtain the default password for the device.
