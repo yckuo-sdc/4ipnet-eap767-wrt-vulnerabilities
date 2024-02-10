@@ -1,4 +1,6 @@
 # 4ipnet/EAP767 WRT Vulnerabilities
+## Overview
+4ipnet/EAP767 WRT is vulnerable to Incorrect Access Control and Os Command Injection
 
 The login web page is exposed to internet, and it's used for 4ipnet wireless network controller
 > Search online documents to obtain the default password for the device.
